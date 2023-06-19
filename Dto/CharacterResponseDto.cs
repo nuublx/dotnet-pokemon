@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace dotnet_rpg.Models;
-    public class Character
+namespace dotnet_rpg.Dto
+{
+    public class CharacterResponseDto
     {
-        public Character()
-        {
-            Id = Guid.NewGuid();
-        }
-        public Guid Id { get;}
+        public Guid Id { get; set;} = Guid.Empty;
         public string? Name { get; set; } = "Character";
         public int HitPoints { get; set; } = 100;
         public int Strength { get; set; } = 10;
@@ -19,3 +16,4 @@ namespace dotnet_rpg.Models;
         
         public RpgClass Class { get; set; } = RpgClass.Knight;
     }
+}

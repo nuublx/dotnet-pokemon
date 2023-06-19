@@ -3,45 +3,60 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace dotnet_pokemon.Services.CharacterService
+
+namespace dotnet_rpg.Services.CharacterService
 {
     public class CharacterService : ICharacterService
     {
         private static readonly List<Character> characters = new() {
             new Character(),
-            new Character {Id = 1,Name = "Sam"}
+            new Character {Name = "Sam"}
         };
-        public async Task<ServiceResponse<Character>> AddCharacterAsync(Character newCharacter)
+
+        private readonly IMapper _mapper;
+        public CharacterService(IMapper mapper)
         {
-           characters.Add(newCharacter);
-
-
-
-           return new ServiceResponse<Character>{
-            Data = newCharacter,
-            Message = "Character is added successfully",
-            Success = true
-           };
+            _mapper = mapper;
         }
-
-        public async Task<ServiceResponse<List<Character>>> GetAllCharactersAsync()
+        public async Task<ServiceResponse<CharacterResponseDto>> AddCharacterAsync(CharacterRequestDto newCharacter)
         {
-            return new ServiceResponse<List<Character>> {
-                Data = characters,
+            var character = _mapper.Map<Character>(newCharacter);
+            
+            characters.Add(character);
+            
+            var characterResponse = _mapper.Map<CharacterResponseDto>(character);
+
+            return new ServiceResponse<CharacterResponseDto>{
+                Data = characterResponse,
+                Message = "Character is added successfully",
+                Success = true
+            };
+        }
+        public async Task<ServiceResponse<List<CharacterResponseDto>>> GetAllCharactersAsync()
+        {
+            var charactersResponse = characters.Select(c => _mapper.Map<CharacterResponseDto>(c)).ToList();
+            return new ServiceResponse<List<CharacterResponseDto>> {
+                Data = charactersResponse,
                 Message = $"Number of Records: {characters.Count}",
                 Success = true
             };
         }
 
-        public async Task<ServiceResponse<Character?>> GetCharacterByIdAsync(int Id)
+        public async Task<ServiceResponse<CharacterResponseDto?>> GetCharacterByIdAsync(Guid Id)
         {
-            var character = characters.FirstOrDefault(c => c.Id == Id);
-
-            return new ServiceResponse<Character?>{
-                Data = character,
-                Message = "Character is found successfully",
-                Success = true
-            };
+            var characterResponse =  _mapper.Map<CharacterResponseDto>(characters.FirstOrDefault(c => c.Id == Id));
+            if (characterResponse != null)
+                return new ServiceResponse<CharacterResponseDto?>{
+                    Data = characterResponse,
+                    Message = "Character is found successfully",
+                    Success = true
+                };
+            else 
+                return new ServiceResponse<CharacterResponseDto?>{
+                    Data = null,
+                    Message = "Character is not found!",
+                    Success = false
+                };
         }
     }
 }

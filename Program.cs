@@ -1,6 +1,8 @@
-global using dotnet_pokemon.Models;
-global using dotnet_pokemon.Services;
-using dotnet_pokemon.Services.CharacterService;
+global using dotnet_rpg.Models;
+global using dotnet_rpg.Services;
+global using dotnet_rpg.Dto;
+global using AutoMapper;
+using dotnet_rpg.Services.CharacterService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 
 var app = builder.Build();

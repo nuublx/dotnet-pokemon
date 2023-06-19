@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using dotnet_pokemon.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace dotnet_pokemon.Controllers;
+namespace dotnet_rpg.Controllers;
     [ApiController]
     [Route("api/[controller]")]
     public class CharacterController : ControllerBase
@@ -18,20 +17,20 @@ namespace dotnet_pokemon.Controllers;
             
         }
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Character>>>> GetCharacters()
+        public async Task<ActionResult<ServiceResponse<List<CharacterResponseDto>>>> GetCharacters()
         {
             var charactersResponse = await _CharacterService.GetAllCharactersAsync();
             return Ok(charactersResponse);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<Character>>> GetCharacter(int id) {
+        public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> GetCharacter(Guid id) {
             var characterResponse = await _CharacterService.GetCharacterByIdAsync(id);
             return Ok(characterResponse);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<Character>>> AddCharacter(Character newCharacter)
+        public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> AddCharacter(CharacterRequestDto newCharacter)
         {
             var CharacterCreatedResponse = await _CharacterService.AddCharacterAsync(newCharacter);
             return Ok(CharacterCreatedResponse);
