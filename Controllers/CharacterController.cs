@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using dotnet_pokemon.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_pokemon.Controllers;
@@ -10,26 +10,30 @@ namespace dotnet_pokemon.Controllers;
     [Route("api/[controller]")]
     public class CharacterController : ControllerBase
     {
-        private static List<Character> characters = new() {
-            new Character(),
-            new Character {Id = 1,Name = "Sam"}
-        };
+        private  readonly ICharacterService _CharacterService;
         
-        [HttpGet]
-        public ActionResult<List<Character>> GetCharacters()
+        public CharacterController(ICharacterService characterService)
         {
-            return Ok(characters);
+            _CharacterService = characterService;
+            
+        }
+        [HttpGet]
+        public async Task<ActionResult<ServiceResponse<List<Character>>>> GetCharacters()
+        {
+            var charactersResponse = await _CharacterService.GetAllCharactersAsync();
+            return Ok(charactersResponse);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Character> GetCharacter(int id) {
-            return Ok(characters.FirstOrDefault(c => c.Id == id));
+        public async Task<ActionResult<ServiceResponse<Character>>> GetCharacter(int id) {
+            var characterResponse = await _CharacterService.GetCharacterByIdAsync(id);
+            return Ok(characterResponse);
         }
 
         [HttpPost]
-        public ActionResult<Character> AddCharacter(Character newCharacter)
+        public async Task<ActionResult<ServiceResponse<Character>>> AddCharacter(Character newCharacter)
         {
-            characters.Add(newCharacter);
-            return Ok(newCharacter);
+            var CharacterCreatedResponse = await _CharacterService.AddCharacterAsync(newCharacter);
+            return Ok(CharacterCreatedResponse);
         }
     }
