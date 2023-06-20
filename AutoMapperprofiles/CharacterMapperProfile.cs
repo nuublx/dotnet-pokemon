@@ -11,7 +11,8 @@ namespace dotnet_rpg.AutoMapperProfiles
         public CharacterMapperProfile()
         {
             CreateMap<Character, CharacterResponseDto>();
-            CreateMap<CharacterRequestDto,Character>();
+            CreateMap<AddCharacterDto, Character>();
+            CreateMap<UpdateCharacterDto, Character>();
         }
     }
 }

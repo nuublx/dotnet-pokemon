@@ -30,9 +30,29 @@ namespace dotnet_rpg.Controllers;
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> AddCharacter(CharacterRequestDto newCharacter)
+        public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> AddCharacter(AddCharacterDto newCharacter)
         {
             var CharacterCreatedResponse = await _CharacterService.AddCharacterAsync(newCharacter);
             return Ok(CharacterCreatedResponse);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> UpdateCharacter(UpdateCharacterDto updatedCharacter, Guid id){
+            var response = await _CharacterService.UpdatedCharacterAsync(updatedCharacter, id);
+            if (response.Data is null) {
+                return NotFound(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> DeleteCharacter( Guid id){
+            var response = await _CharacterService.DeleteCharacterAsync(id);
+            if (response.Data is null) {
+                return NotFound(response);
+            }
+
+            return Ok(response);
         }
     }

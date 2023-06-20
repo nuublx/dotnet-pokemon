@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace dotnet_rpg.Dto
 {
-    public class CharacterRequestDto
+    public class UpdateCharacterDto
     {
         public string? Name { get; set; } = "Character";
         public int HitPoints { get; set; } = 100;
