@@ -7,7 +7,7 @@ namespace dotnet_rpg.Dto
 {
     public class CharacterResponseDto
     {
-        public Guid Id { get; set;} = Guid.Empty;
+        public int Id { get; set;} = 0;
         public string? Name { get; set; } = "Character";
         public int HitPoints { get; set; } = 100;
         public int Strength { get; set; } = 10;
