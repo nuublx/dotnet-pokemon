@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnet_rpg.Controllers;
+
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CharacterController : ControllerBase
@@ -19,10 +23,10 @@ namespace dotnet_rpg.Controllers;
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<CharacterResponseDto>>>> GetCharacters()
         {
-            var charactersResponse = await _CharacterService.GetAllCharactersAsync();
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
+            var charactersResponse = await _CharacterService.GetAllCharactersAsync(userId);
             return Ok(charactersResponse);
         }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> GetCharacter(int id) {
             var characterResponse = await _CharacterService.GetCharacterByIdAsync(id);
@@ -35,7 +39,8 @@ namespace dotnet_rpg.Controllers;
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<CharacterResponseDto>>> AddCharacter(AddCharacterDto newCharacter)
         {
-            var CharacterCreatedResponse = await _CharacterService.AddCharacterAsync(newCharacter);
+            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
+            var CharacterCreatedResponse = await _CharacterService.AddCharacterAsync(newCharacter, userId);
             return Ok(CharacterCreatedResponse);
         }
 
